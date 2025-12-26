@@ -1,7 +1,9 @@
 package com.joaco.inventory.application.service;
 
 import com.joaco.inventory.domain.model.Category;
+import com.joaco.inventory.domain.model.CustomPage;
 import com.joaco.inventory.domain.model.Product;
+import com.joaco.inventory.domain.model.ProductFilter;
 import com.joaco.inventory.domain.port.in.ProductServicePort;
 import com.joaco.inventory.domain.port.out.CategoryRepositoryPort;
 import com.joaco.inventory.domain.port.out.ProductRepositoryPort;
@@ -61,8 +63,8 @@ public class ProductService implements ProductServicePort {
     }
 
     @Override
-    public List<Product> getAllProducts() {
-        return productRepositoryPort.findAll();
+    public CustomPage<Product> getAllProducts(ProductFilter filter, int page, int size) {
+        return productRepositoryPort.findAll(filter, page, size);
     }
 
     @Override

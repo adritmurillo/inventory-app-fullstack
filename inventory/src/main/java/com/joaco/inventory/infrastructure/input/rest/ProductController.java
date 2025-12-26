@@ -1,7 +1,9 @@
 package com.joaco.inventory.infrastructure.input.rest;
 
 
+import com.joaco.inventory.domain.model.CustomPage;
 import com.joaco.inventory.domain.model.Product;
+import com.joaco.inventory.domain.model.ProductFilter;
 import com.joaco.inventory.domain.port.in.ProductServicePort;
 import com.joaco.inventory.infrastructure.input.rest.mapper.ProductMapper;
 import com.joaco.inventory.infrastructure.input.rest.model.ProductRequest;
@@ -13,7 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 @RestController
 @RequestMapping("/api/products")
@@ -43,11 +45,32 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductResponse>> getAll(){
-        List<ProductResponse> responses = productServicePort.getAllProducts().stream()
-                .map(mapper :: toResponse)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(responses);
+    public ResponseEntity<CustomPage<ProductResponse>> getAll(
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ){
+        ProductFilter filter = ProductFilter.builder()
+                .name(search)
+                .categoryId(categoryId)
+                .build();
+
+        CustomPage<Product> domainPage = productServicePort.getAllProducts(filter, page, size);
+
+        List<ProductResponse> responseContent = domainPage.getContent().stream().map(mapper :: toResponse)
+                .toList();
+
+        CustomPage<ProductResponse> responsePage = CustomPage.<ProductResponse>builder()
+                .content(responseContent)
+                .pageNumber(domainPage.getPageNumber())
+                .pageSize(domainPage.getPageSize())
+                .totalElements(domainPage.getTotalElements())
+                .totalPages(domainPage.getTotalPages())
+                .last(domainPage.isLast())
+                .build();
+
+        return ResponseEntity.ok(responsePage);
     }
 
     @GetMapping("/{id}")
