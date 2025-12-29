@@ -18,23 +18,44 @@ import java.util.List;
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:5173")
 public class CategoryController {
+
     private final CategoryServicePort servicePort;
     private final CategoryMapper mapper;
 
     @PostMapping
-    public ResponseEntity<CategoryResponse> create(
-            @Valid
-            @RequestBody CategoryRequest request
-    ){
+    public ResponseEntity<CategoryResponse> create(@Valid @RequestBody CategoryRequest request){
         Category domain = mapper.toDomain(request);
         Category newCategory = servicePort.createCategory(domain);
         return new ResponseEntity<>(mapper.toResponse(newCategory), HttpStatus.CREATED);
     }
+
     @GetMapping
     public ResponseEntity<List<CategoryResponse>> getAll(){
         List<CategoryResponse> list = servicePort.getAllCategories().stream()
-                .map(mapper :: toResponse)
+                .map(mapper::toResponse)
                 .toList();
         return ResponseEntity.ok(list);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<CategoryResponse> getById(@PathVariable Long id) {
+        Category category = servicePort.getCategoryById(id);
+        return ResponseEntity.ok(mapper.toResponse(category));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<CategoryResponse> update(
+            @PathVariable Long id,
+            @Valid @RequestBody CategoryRequest request
+    ) {
+        Category domain = mapper.toDomain(request);
+        Category updatedCategory = servicePort.updateCategory(id, domain);
+        return ResponseEntity.ok(mapper.toResponse(updatedCategory));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        servicePort.deleteCategory(id);
+        return ResponseEntity.noContent().build();
     }
 }

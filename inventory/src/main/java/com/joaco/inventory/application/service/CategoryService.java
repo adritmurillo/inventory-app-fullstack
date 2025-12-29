@@ -25,4 +25,29 @@ public class CategoryService implements CategoryServicePort {
     public List<Category> getAllCategories() {
         return categoryRepositoryPort.findAll();
     }
+
+    @Override
+    public Category getCategoryById(Long id) {
+        return categoryRepositoryPort.findById(id).orElseThrow(
+                () -> new RuntimeException("Category with id " + id + " not found")
+        );
+    }
+
+    @Override
+    public Category updateCategory(Long id, Category incomingCategoryData) {
+        Category existingCategory = getCategoryById(id);
+
+        existingCategory.updateName(incomingCategoryData.getName());
+        existingCategory.updateDescription(incomingCategoryData.getDescription());
+
+        return categoryRepositoryPort.save(existingCategory);
+    }
+
+    @Override
+    public void deleteCategory(Long id) {
+        if (categoryRepositoryPort.findById(id).isEmpty()) {
+            throw new RuntimeException("Category not found with id: " + id);
+        }
+        categoryRepositoryPort.deleteById(id);
+    }
 }

@@ -9,4 +9,5 @@ public interface CategoryRepositoryPort {
     Optional<Category> findById(Long id);
     Category save(Category category);
     List<Category> findAll();
+    void deleteById(Long id);
 }

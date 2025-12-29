@@ -74,6 +74,13 @@ public class ProductPersistenceAdapter implements ProductRepositoryPort {
     }
 
     @Override
+    public List<Product> findAll() {
+        List<ProductEntity> entities = repository.findAll();
+        return entities.stream().map(mapper::toDomain).toList();
+    }
+
+
+    @Override
     public void deleteById(Long id) {
         repository.deleteById(id);
     }

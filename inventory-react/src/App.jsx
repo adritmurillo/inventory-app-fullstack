@@ -1,37 +1,56 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Sidebar from "./Sidebar"; 
+import Dashboard from "./Dashboard"; 
 import ProductList from "./ProductList";
-import ProductForm from "./ProductForm"; 
+import ProductForm from "./ProductForm";
+import ProductDetail from "./ProductDetail"; 
+
 import CategoryForm from "./CategoryForm";
+import CategoryList from "./CategoryList"; 
 
 function App() {
   return (
-    <BrowserRouter>
-      <div className="bg-light min-vh-100 d-flex flex-column">
-        {/* NAVBAR */}
-        <nav className="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
-          <div className="container">
-            <span className="navbar-brand fw-bold d-flex align-items-center gap-2">
-              <i className="bi bi-box-seam-fill text-primary"></i>
-              Inventory System
-            </span>
-          </div>
-        </nav>
+    <Router>
+      <div className="d-flex min-vh-100 bg-light">
+        
+        {/* 1. SIDEBAR (Menú Fijo a la Izquierda) */}
+        <Sidebar />
 
-        {/* RUTAS */}
-        <div className="container flex-grow-1 d-flex justify-content-center align-items-center py-5">
-          <Routes>
-            <Route path="/" element={<ProductList />} />
-            <Route path="/new" element={<ProductForm />} />
-            <Route path="/edit/:id" element={<ProductForm />} />
-            <Route path="/new-category" element={<CategoryForm />} />
-          </Routes>
+        {/* 2. ÁREA DE CONTENIDO (A la derecha del sidebar) */}
+        {/* El margin-left: 250px es para que el contenido no quede debajo del Sidebar fijo */}
+        <div className="flex-grow-1" style={{ marginLeft: "250px" }}> 
+            
+            {/* Contenedor fluido para aprovechar el ancho */}
+            <div className="container-fluid p-4">
+              <Routes>
+                {/* RUTA PRINCIPAL: Ahora muestra el Dashboard */}
+                <Route path="/" element={<Dashboard />} />
+                
+                {/* RUTA PRODUCTOS: Movimos la lista aquí */}
+                <Route path="/products" element={<ProductList />} />
+                
+                {/* OTRAS RUTAS */}
+                <Route path="/new" element={<ProductForm />} />
+                <Route path="/edit/:id" element={<ProductForm />} />
+                <Route path="/view/:id" element={<ProductDetail />} />
+                
+                {/* GESTIÓN DE CATEGORÍAS */}
+                {/* Ahora /categories muestra la LISTA */}
+                <Route path="/categories" element={<CategoryList />} />
+                
+                {/* /new-category sigue mostrando el FORMULARIO */}
+                <Route path="/new-category" element={<CategoryForm />} />
+              </Routes>
+            </div>
+
+            {/* Footer opcional dentro del área de contenido */}
+            <footer className="text-center py-3 text-muted small border-top mt-auto">
+                &copy; 2026 Inventory System
+            </footer>
         </div>
-
-        <footer className="bg-white text-center py-3 text-muted small border-top">
-          &copy; 2024 Inventory App - React & Spring Boot
-        </footer>
+        
       </div>
-    </BrowserRouter>
+    </Router>
   );
 }
 

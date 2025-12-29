@@ -34,4 +34,9 @@ public class CategoryPersistenceAdapter implements CategoryRepositoryPort {
                 .map(mapper :: toDomain)
                 .toList();
     }
+
+    @Override
+    public void deleteById(Long id) {
+        repo.deleteById(id);
+    }
 }
