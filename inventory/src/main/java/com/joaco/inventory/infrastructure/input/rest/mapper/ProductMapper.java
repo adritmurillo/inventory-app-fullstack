@@ -32,6 +32,7 @@ public class ProductMapper {
                 .id(domain.getId())
                 .name(domain.getName())
                 .description(domain.getDescription())
+                .imageUrl(domain.getImageUrl())
                 .price(domain.getPrice())
                 .stock(domain.getStock())
                 .minStock(domain.getMinStock())

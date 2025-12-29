@@ -19,6 +19,10 @@ public class ProductEntity {
     private Long id;
     private String name;
     private String description;
+
+    @Column(name = "image_url")
+    private String imageUrl;
+
     private Integer stock;
     private Integer minStock;
     private BigDecimal price;

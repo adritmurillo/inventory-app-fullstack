@@ -15,6 +15,7 @@ public class ProductPersistenceMapper {
                 .id(entity.getId())
                 .name(entity.getName())
                 .description(entity.getDescription())
+                .imageUrl(entity.getImageUrl())
                 .price(entity.getPrice())
                 .stock(entity.getStock())
                 .minStock(entity.getMinStock())
@@ -28,6 +29,7 @@ public class ProductPersistenceMapper {
         entity.setId(domain.getId());
         entity.setName(domain.getName());
         entity.setDescription(domain.getDescription());
+        entity.setImageUrl(domain.getImageUrl());
         entity.setPrice(domain.getPrice());
         entity.setStock(domain.getStock());
         entity.setMinStock(domain.getMinStock());

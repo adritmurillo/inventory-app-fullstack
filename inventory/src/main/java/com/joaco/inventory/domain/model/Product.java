@@ -13,6 +13,7 @@ public class Product {
     private Long id;
     private String name;
     private String description;
+    private String imageUrl;
     private int stock;
     private int minStock;
     private BigDecimal price;
@@ -50,6 +51,10 @@ public class Product {
 
     public boolean isStockLow(){
         return this.stock <= this.minStock;
+    }
+
+    public void updateImageUrl(String newImageUrl) {
+        this.imageUrl = newImageUrl;
     }
 }
 

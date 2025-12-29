@@ -85,14 +85,29 @@ export default function ProductList() {
 
     return (
         <div className="w-100" style={{ maxWidth: "900px" }}>
+            {/* CABECERA ACTUALIZADA CON DOS BOTONES */}
             <div className="d-flex justify-content-between align-items-center mb-4">
                 <h3 className="fw-bold text-dark m-0">Product List</h3>
-                <button
-                    className="btn btn-primary d-flex align-items-center gap-2 shadow-sm"
-                    onClick={() => navigate("/new")}
-                >
-                    <i className="bi bi-plus-lg"></i> New Product
-                </button>
+                
+                <div className="d-flex gap-2">
+                    {/* Botón Nueva Categoría (Secundario) */}
+                    <button 
+                        className="btn btn-outline-primary d-flex align-items-center gap-2 shadow-sm" 
+                        onClick={() => navigate("/new-category")}
+                    >
+                        <i className="bi bi-tags-fill"></i>
+                        <span>New Category</span>
+                    </button>
+
+                    {/* Botón Nuevo Producto (Principal) */}
+                    <button 
+                        className="btn btn-primary d-flex align-items-center gap-2 shadow-sm" 
+                        onClick={() => navigate("/new")}
+                    >
+                        <i className="bi bi-plus-lg"></i>
+                        <span>New Product</span>
+                    </button>
+                </div>
             </div>
 
             {/* Filters */}

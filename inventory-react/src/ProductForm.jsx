@@ -1,154 +1,104 @@
-import { useEffect, useState } from "react";
-import { useNavigate, useParams, Link } from "react-router-dom";
-import axios from "axios";
+// src/ProductForm.jsx
+import { useProductForm } from "./hooks/useProductForm";
 
 export default function ProductForm() {
-  const navigate = useNavigate();
-  const { id } = useParams(); // Captura el ID si estamos editando
+    // 1. Extraemos toda la lógica del hook
+    const { 
+        product, categories, previewUrl, isEditing, 
+        handleInputChange, handleFileChange, handleSubmit, navigate 
+    } = useProductForm();
 
-  // Estados del formulario
-  const [product, setProduct] = useState({
-    name: "",
-    description: "",
-    price: "",
-    stock: "",
-    minStock: "",
-    categoryId: ""
-  });
+    return (
+        <div className="container py-4">
+            <div className="row justify-content-center">
+                <div className="col-md-8 col-lg-6">
+                    <div className="card shadow border-0 rounded-4">
+                        <div className="card-header bg-white border-0 pt-4 px-4 text-center">
+                            <h3 className="fw-bold text-dark">{isEditing ? "Edit Product" : "New Product"}</h3>
+                        </div>
+                        <div className="card-body p-4">
+                            <form onSubmit={handleSubmit}>
+                                
+                                {/* --- ZONA DE IMAGEN --- */}
+                                <div className="mb-4 text-center">
+                                    <div className="mx-auto mb-3 d-flex align-items-center justify-content-center border rounded-3 bg-light position-relative overflow-hidden" 
+                                         style={{ width: "150px", height: "150px", borderStyle: "dashed" }}>
+                                        {previewUrl ? (
+                                            <img src={previewUrl} alt="Preview" className="w-100 h-100 object-fit-cover" />
+                                        ) : (
+                                            <div className="text-secondary text-center p-3">
+                                                <i className="bi bi-camera fs-1"></i>
+                                                <div className="small mt-1">Select Photo</div>
+                                            </div>
+                                        )}
+                                    </div>
+                                    <input type="file" className="form-control form-control-sm mx-auto" 
+                                           style={{ maxWidth: "250px" }} onChange={handleFileChange} accept="image/*" />
+                                </div>
 
-  const [categories, setCategories] = useState([]);
+                                {/* --- CAMPOS DEL FORMULARIO --- */}
+                                <div className="mb-3">
+                                    <label className="form-label fw-bold small text-secondary">Product Name</label>
+                                    <input type="text" className="form-control" name="name" 
+                                           value={product.name} onChange={handleInputChange} required />
+                                </div>
 
-  // URL base
-  const API_URL = "http://localhost:8080/api";
+                                <div className="mb-3">
+                                    <label className="form-label fw-bold small text-secondary">Description</label>
+                                    <textarea className="form-control" name="description" rows="2"
+                                              value={product.description} onChange={handleInputChange} />
+                                </div>
 
-  useEffect(() => {
-    loadCategories();
-    // Si hay ID, estamos editando: cargamos el producto
-    if (id) {
-      loadProduct();
-    }
-  }, []);
+                                <div className="row g-2 mb-3">
+                                    <div className="col-6">
+                                        <label className="form-label fw-bold small text-secondary">Price</label>
+                                        <div className="input-group">
+                                            <span className="input-group-text">$</span>
+                                            <input type="number" className="form-control" name="price" step="0.01"
+                                                   value={product.price} onChange={handleInputChange} required />
+                                        </div>
+                                    </div>
+                                    <div className="col-6">
+                                        <label className="form-label fw-bold small text-secondary">Category</label>
+                                        <select className="form-select" name="categoryId" 
+                                                value={product.categoryId} onChange={handleInputChange} required>
+                                            <option value="">Select...</option>
+                                            {categories.map(cat => (
+                                                <option key={cat.id} value={cat.id}>{cat.name}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                </div>
 
-  const loadCategories = async () => {
-    try {
-      // Asumimos que tienes este endpoint. Si no, ¡avísame!
-      const result = await axios.get(`${API_URL}/categories`);
-      setCategories(result.data);
-    } catch (error) {
-      console.error("Error loading categories:", error);
-    }
-  };
+                                <div className="row g-2 mb-4">
+                                    <div className="col-6">
+                                        <label className="form-label fw-bold small text-secondary">Stock</label>
+                                        <input type="number" className="form-control" name="stock" 
+                                               value={product.stock} onChange={handleInputChange} required />
+                                    </div>
+                                    <div className="col-6">
+                                        <label className="form-label fw-bold small text-secondary">Min. Alert</label>
+                                        <input type="number" className="form-control" name="minStock" 
+                                               value={product.minStock} onChange={handleInputChange} required />
+                                    </div>
+                                </div>
 
-  const loadProduct = async () => {
-    try {
-      const result = await axios.get(`${API_URL}/products/${id}`);
-      setProduct(result.data);
-    } catch (error) {
-      console.error("Error loading product:", error);
-    }
-  };
+                                {/* --- BOTONES --- */}
+                                <div className="d-grid gap-2">
+                                    <button type="submit" className="btn btn-primary py-2 fw-bold shadow-sm">
+                                        {isEditing ? "Update Product" : "Save Product"}
+                                    </button>
+                                    <button type="button" className="btn btn-link text-secondary text-decoration-none" 
+                                            onClick={() => navigate("/")}>
+                                        Cancel
+                                    </button>
+                                </div>
 
-  const handleChange = (e) => {
-    setProduct({ ...product, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      if (id) {
-        // MODO EDITAR (PUT)
-        await axios.put(`${API_URL}/products/${id}`, product);
-      } else {
-        // MODO CREAR (POST)
-        await axios.post(`${API_URL}/products`, product);
-      }
-      navigate("/"); // Volver a la lista
-    } catch (error) {
-      console.error("Error saving product:", error);
-      alert("Error saving product. Check console.");
-    }
-  };
-
-  return (
-    <div className="card shadow border-0 rounded-4 w-100" style={{ maxWidth: "600px" }}>
-      <div className="card-header bg-white border-0 py-3">
-        <h4 className="fw-bold text-dark m-0">
-          {id ? "✏️ Edit Product" : "✨ New Product"}
-        </h4>
-      </div>
-      <div className="card-body">
-        <form onSubmit={handleSubmit}>
-          
-          <div className="mb-3">
-            <label className="form-label fw-bold small text-secondary">Name</label>
-            <input type="text" className="form-control" name="name" 
-              value={product.name} onChange={handleChange} required />
-          </div>
-
-          <div className="mb-3">
-            <label className="form-label fw-bold small text-secondary">Description</label>
-            <textarea className="form-control" name="description" rows="2"
-              value={product.description} onChange={handleChange}></textarea>
-          </div>
-
-          <div className="mb-3">
-            <label className="form-label fw-bold small text-secondary">Category</label>
-            
-            {/* 👇 CAMBIO AQUÍ: Usamos input-group para pegar el botón al select 👇 */}
-            <div className="input-group">
-              <select 
-                className="form-select" 
-                name="categoryId" 
-                value={product.categoryId || ""} 
-                onChange={handleChange} 
-                required
-              >
-                <option value="" disabled>Select a category...</option>
-                {categories.map(cat => (
-                  <option key={cat.id} value={cat.id}>{cat.name}</option>
-                ))}
-              </select>
-              
-              {/* Botón que te lleva a crear categoría */}
-              <button 
-                className="btn btn-outline-primary" 
-                type="button" 
-                onClick={() => navigate("/new-category")}
-                title="Create New Category"
-              >
-                <i className="bi bi-plus-lg"></i>
-              </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
-            
-          </div>
-
-          <div className="row">
-            <div className="col-md-4 mb-3">
-              <label className="form-label fw-bold small text-secondary">Price ($)</label>
-              <input type="number" step="0.01" className="form-control" name="price"
-                value={product.price} onChange={handleChange} required />
-            </div>
-            <div className="col-md-4 mb-3">
-              <label className="form-label fw-bold small text-secondary">Stock</label>
-              <input type="number" className="form-control" name="stock"
-                value={product.stock} onChange={handleChange} required />
-            </div>
-            <div className="col-md-4 mb-3">
-              <label className="form-label fw-bold small text-secondary">Min Stock</label>
-              <input type="number" className="form-control" name="minStock"
-                value={product.minStock} onChange={handleChange} required />
-            </div>
-          </div>
-
-          <div className="d-flex justify-content-end gap-2 mt-4">
-            <Link to="/" className="btn btn-light text-secondary">Cancel</Link>
-            <button type="submit" className="btn btn-primary px-4">
-              {id ? "Update" : "Save Product"}
-            </button>
-          </div>
-
-        </form>
-      </div>
-    </div>
-  );
+        </div>
+    );
 }

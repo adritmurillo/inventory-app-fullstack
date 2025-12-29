@@ -11,8 +11,10 @@ import com.joaco.inventory.infrastructure.input.rest.model.ProductResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -25,22 +27,24 @@ public class ProductController {
     private final ProductServicePort productServicePort;
     private final ProductMapper mapper;
 
-    @PostMapping
-    public ResponseEntity<ProductResponse> create(@Valid @RequestBody ProductRequest productRequest) {
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ProductResponse> create(
+            @RequestPart("product") @Valid ProductRequest productRequest,
+            @RequestPart(value = "image", required = false) MultipartFile image
+    ) {
         Product domain = mapper.toDomain(productRequest);
-        Product saved = productServicePort.createProduct(domain);
+        Product saved = productServicePort.createProduct(domain, image);
         return new ResponseEntity<>(mapper.toResponse(saved), HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<ProductResponse> update
-            (
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ProductResponse> update(
                     @PathVariable Long id,
-                    @Valid
-                    @RequestBody ProductRequest request
+                    @RequestPart("product") @Valid ProductRequest request,
+                    @RequestPart(value = "image", required = false) MultipartFile image
             ){
         Product domain = mapper.toDomain(request);
-        Product updated = productServicePort.updateProduct(id, domain);
+        Product updated = productServicePort.updateProduct(id, domain, image);
         return ResponseEntity.ok(mapper.toResponse(updated));
     }
 
