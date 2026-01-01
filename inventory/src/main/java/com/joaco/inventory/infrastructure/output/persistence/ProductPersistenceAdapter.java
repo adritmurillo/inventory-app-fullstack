@@ -10,6 +10,7 @@ import com.joaco.inventory.infrastructure.output.persistence.repository.ProductJ
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 
@@ -77,6 +78,14 @@ public class ProductPersistenceAdapter implements ProductRepositoryPort {
     public List<Product> findAll() {
         List<ProductEntity> entities = repository.findAll();
         return entities.stream().map(mapper::toDomain).toList();
+    }
+
+    @Override
+    public List<Product> findAllSortedByPrice(String direction) {
+        Sort.Direction sortDirection = "asc".equalsIgnoreCase(direction) ? Sort.Direction.ASC : Sort.Direction.DESC;
+        return repository.findAll(Sort.by(sortDirection, "price")).stream()
+                .map(mapper :: toDomain)
+                .toList();
     }
 
 

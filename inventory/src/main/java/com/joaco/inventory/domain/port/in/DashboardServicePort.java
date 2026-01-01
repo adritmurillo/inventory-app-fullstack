@@ -11,4 +11,5 @@ public interface DashboardServicePort {
     List<ChartData> getProductsByCategory();
     List<Product> getLowStockProducts();
     List<ChartData> getInventoryValueByCategory();
+    public List<Product> getAllProductsSortedByPrice(String direction);
 }

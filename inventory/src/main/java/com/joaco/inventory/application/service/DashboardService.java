@@ -76,4 +76,9 @@ public class DashboardService implements DashboardServicePort {
                 .map(entry -> new ChartData(entry.getKey(), entry.getValue().doubleValue()))
                 .toList();
     }
+
+    @Override
+    public List<Product> getAllProductsSortedByPrice(String direction) {
+        return productRepositoryPort.findAllSortedByPrice(direction);
+    }
 }

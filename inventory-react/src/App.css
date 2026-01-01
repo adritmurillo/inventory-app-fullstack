@@ -1,0 +1,92 @@
+:root {
+    --panel-bg: #f8f9fb;
+    --soft-border: #e9ecef;
+    --muted-text: #6c757d;
+    --card-radius: 18px;
+}
+
+body {
+    background-color: #f5f6f8;
+}
+
+.kpi-card {
+    padding: 0.9rem 1rem;
+    border-radius: var(--card-radius);
+}
+
+.kpi-subtitle {
+    color: var(--muted-text);
+    font-size: 0.75rem;
+    letter-spacing: 0.02em;
+}
+
+.chart-card,
+.top-value-card,
+.pie-card,
+.low-stock-card {
+    border-radius: var(--card-radius);
+    border: 1px solid var(--soft-border);
+    background: #fff;
+}
+
+.top-value-card {
+    min-height: 520px;
+}
+
+.top-value-list {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.top-value-list .list-group-item:hover,
+.low-stock-card tbody tr:hover {
+    background-color: #f8f9fb;
+}
+
+.pie-card {
+    min-height: 440px;
+}
+
+.pie-legend {
+    font-size: 0.85rem;
+}
+
+.section-label {
+    color: var(--muted-text);
+    font-size: 0.8rem;
+}
+
+.refresh-btn {
+    transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.refresh-btn:hover {
+    transform: rotate(-6deg);
+    opacity: 0.8;
+}
+
+.card-title-compact {
+    margin-bottom: 0;
+    font-size: 1rem;
+}
+
+.low-stock-card table th,
+.low-stock-card table td {
+    font-size: 0.92rem;
+}
+
+.value-amount {
+    color: #0d6efd;
+}
+
+@media (max-width: 991px) {
+    .top-value-card {
+        min-height: 0;
+    }
+    .top-value-list {
+        max-height: none;
+    }
+    .pie-card {
+        min-height: 380px;
+    }
+}

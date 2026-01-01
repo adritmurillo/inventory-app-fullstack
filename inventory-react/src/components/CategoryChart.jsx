@@ -25,7 +25,7 @@ export default function CategoryChart({ data }) {
     }
 
     return (
-        <div style={{ width: '100%', height: '300px' }}>
+        <div style={{ width: '100%', height: '100%', minHeight: '320px' }}>
             <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={data} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
                     <CartesianGrid strokeDasharray="3 3" vertical={false} />

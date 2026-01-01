@@ -12,5 +12,6 @@ public interface ProductRepositoryPort {
     Optional<Product> findById(Long id);
     CustomPage<Product> findAll(ProductFilter filter, int page, int size);
     List<Product> findAll();
+    List<Product> findAllSortedByPrice(String direction);
     void deleteById(Long id);
 }
