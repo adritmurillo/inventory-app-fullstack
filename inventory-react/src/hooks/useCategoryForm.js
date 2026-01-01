@@ -6,7 +6,6 @@ export const useCategoryForm = () => {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     
-    // Obtenemos el ID desde "?edit=1"
     const editId = searchParams.get("edit"); 
 
     const [category, setCategory] = useState({
@@ -41,7 +40,7 @@ export const useCategoryForm = () => {
             } else {
                 await axios.post(API_URL, category);
             }
-            navigate("/categories"); // Volvemos a la lista
+            navigate("/categories");
         } catch (error) {
             console.error("Error saving category:", error);
             alert("Error saving category");
@@ -50,7 +49,7 @@ export const useCategoryForm = () => {
 
     return {
         category,
-        isEditing: !!editId, // True si hay un ID, False si es nueva
+        isEditing: !!editId,
         handleInputChange,
         handleSubmit,
         navigate

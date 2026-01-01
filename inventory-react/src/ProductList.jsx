@@ -4,28 +4,24 @@ import { useProductList } from "./hooks/useProductList";
 export default function ProductList() {
     const navigate = useNavigate();
     
-    // Extraemos las nuevas propiedades del hook
     const { 
         products, categories, 
         searchTerm, setSearchTerm, 
         selectedCategoryId, setSelectedCategoryId, 
-        handleDelete, isLoading 
+        handleDelete, isLoading,
+        page, setPage, totalPages
     } = useProductList();
 
     return (
         <div className="w-100" style={{ maxWidth: "1000px" }}>
             
-            {/* HEADERS */}
             <div className="d-flex justify-content-between align-items-center mb-4">
                 <h3 className="fw-bold text-dark m-0">Product List</h3>
                 <button className="btn btn-primary d-flex align-items-center gap-2 shadow-sm" onClick={() => navigate("/new")}>
                     <i className="bi bi-plus-lg"></i> <span>New Product</span>
                 </button>
             </div>
-
-            {/* BARRA DE BÚSQUEDA Y FILTROS */}
             <div className="row mb-4">
-                {/* Columna Buscador */}
                 <div className="col-md-8 mb-2 mb-md-0">
                     <div className="input-group shadow-sm">
                         <span className="input-group-text bg-white border-end-0 text-secondary ps-3"><i className="bi bi-search"></i></span>
@@ -38,8 +34,6 @@ export default function ProductList() {
                         />
                     </div>
                 </div>
-
-                {/* Columna Dropdown Categorías (RECUPERADO) */}
                 <div className="col-md-4">
                     <select 
                         className="form-select shadow-sm" 
@@ -53,8 +47,6 @@ export default function ProductList() {
                     </select>
                 </div>
             </div>
-
-            {/* TABLA DE PRODUCTOS (Sin cambios) */}
             <div className="card border-0 shadow-sm rounded-4 overflow-hidden">
                 <div className="table-responsive">
                     <table className="table table-hover mb-0 align-middle">
@@ -68,7 +60,7 @@ export default function ProductList() {
                             </tr>
                         </thead>
                         <tbody>
-                            {isLoading ? <tr><td colSpan="5" className="text-center py-5">Cargando...</td></tr> : 
+                            {isLoading ? <tr><td colSpan="5" className="text-center py-5">Loading...</td></tr> : 
                              products.map((product) => (
                                 <tr key={product.id}>
                                     <td className="ps-4">
@@ -88,7 +80,6 @@ export default function ProductList() {
                                             {product.stock}
                                         </span>
                                     </td>
-                                    {/* Aquí mostramos el nombre de la categoría */}
                                     <td>
                                         <span className="badge bg-light text-dark border">
                                             {product.categoryName || "Uncategorized"}
@@ -103,7 +94,6 @@ export default function ProductList() {
                                     </td>
                                 </tr>
                             ))}
-                             {/* Mensaje si no hay resultados */}
                              {!isLoading && products.length === 0 && (
                                 <tr>
                                     <td colSpan="5" className="text-center py-5 text-muted">No products found.</td>
@@ -111,6 +101,28 @@ export default function ProductList() {
                             )}
                         </tbody>
                     </table>
+                </div>
+
+                <div className="card-footer bg-white border-0 py-3 d-flex justify-content-between align-items-center">
+                    <button 
+                        className="btn btn-outline-secondary btn-sm"
+                        disabled={page === 0}
+                        onClick={() => setPage(page - 1)}
+                    >
+                        Previous
+                    </button>
+
+                    <span className="text-muted small">
+                        Page {page + 1} of {totalPages === 0 ? 1 : totalPages}
+                    </span>
+
+                    <button 
+                        className="btn btn-outline-secondary btn-sm"
+                        disabled={page >= totalPages - 1}
+                        onClick={() => setPage(page + 1)}
+                    >
+                        Next
+                    </button>
                 </div>
             </div>
         </div>

@@ -3,13 +3,13 @@ import { useCategoryList } from "./hooks/useCategoryList";
 
 export default function CategoryList() {
     const navigate = useNavigate();
-    // 1. Extraemos todo del hook
+    // Hook state and actions
     const { categories, searchTerm, setSearchTerm, handleDelete, isLoading } = useCategoryList();
 
     return (
         <div className="w-100" style={{ maxWidth: "1000px" }}>
             
-            {/* ENCABEZADO */}
+            {/* Header */}
             <div className="d-flex justify-content-between align-items-center mb-4">
                 <h3 className="fw-bold text-dark m-0">Category List</h3>
                 <button 
@@ -21,7 +21,7 @@ export default function CategoryList() {
                 </button>
             </div>
 
-            {/* BÚSQUEDA */}
+            {/* Search */}
             <div className="row mb-4">
                 <div className="col-12">
                     <div className="input-group shadow-sm">
@@ -39,7 +39,7 @@ export default function CategoryList() {
                 </div>
             </div>
 
-            {/* TABLA */}
+            {/* Table */}
             <div className="card border-0 shadow-sm rounded-4 overflow-hidden">
                 <div className="table-responsive">
                     <table className="table table-hover mb-0 align-middle">
@@ -53,12 +53,12 @@ export default function CategoryList() {
                         </thead>
                         <tbody>
                             {isLoading ? (
-                                <tr><td colSpan="4" className="text-center py-4">Cargando...</td></tr>
+                                <tr><td colSpan="4" className="text-center py-4">Loading...</td></tr>
                             ) : categories.map((cat) => (
                                 <tr key={cat.id}>
                                     <td className="ps-4 fw-bold text-secondary">#{cat.id}</td>
                                     <td className="fw-bold text-dark">{cat.name}</td>
-                                    <td className="text-secondary small">{cat.description || "—"}</td>
+                                    <td className="text-secondary small">{cat.description || "-"}</td>
                                     <td className="pe-4 text-end">
                                         <div className="btn-group btn-group-sm">
                                             <button className="btn btn-outline-primary d-flex align-items-center gap-1"

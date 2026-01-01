@@ -1,4 +1,3 @@
-// src/hooks/useProductForm.js
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
@@ -37,7 +36,6 @@ export const useProductForm = () => {
     const loadProduct = async () => {
         try {
             const result = await axios.get(`${API_URL}/${id}`);
-            // Carga los datos de texto
             setProduct({
                 name: result.data.name,
                 description: result.data.description,
@@ -49,8 +47,6 @@ export const useProductForm = () => {
             if (result.data.imageUrl) {
                 setPreviewUrl(result.data.imageUrl);
             }
-            // -------------------------------
-
         } catch (e) { console.error("Error loading product", e); }
     };
 
@@ -83,7 +79,6 @@ export const useProductForm = () => {
         }
     };
 
-    // Retornamos solo lo que la vista necesita
     return {
         product,
         categories,

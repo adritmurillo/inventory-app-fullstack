@@ -22,17 +22,17 @@ export default function Sidebar() {
                 </li>
                 <li className="nav-item mb-1">
                     <Link to="/products" className={isActive("/products")}>
-                        <i className="bi bi-grid me-2"></i> Productos
+                        <i className="bi bi-grid me-2"></i> Products
                     </Link>
                 </li>
                 <li className="nav-item mb-1">
                     <Link to="/categories" className={isActive("/categories")}>
-                        <i className="bi bi-tags-fill me-2"></i> Categorías
+                        <i className="bi bi-tags-fill me-2"></i> Categories
                     </Link>
                 </li>
                 
-                <li className="mt-4 mb-2 ps-2 text-uppercase text-muted fw-bold small">Tienda</li>
-                <li><a href="#" className="nav-link text-secondary disabled"><i className="bi bi-cart me-2"></i> Pedidos</a></li>
+                <li className="mt-4 mb-2 ps-2 text-uppercase text-muted fw-bold small">Store</li>
+                <li><a href="#" className="nav-link text-secondary disabled"><i className="bi bi-cart me-2"></i> Orders</a></li>
             </ul>
             
             <hr />
@@ -43,9 +43,9 @@ export default function Sidebar() {
                     <strong>Admin</strong>
                 </a>
                 <ul className="dropdown-menu text-small shadow">
-                    <li><a className="dropdown-item" href="#">Perfil</a></li>
+                    <li><a className="dropdown-item" href="#">Profile</a></li>
                     <li><hr className="dropdown-divider" /></li>
-                    <li><a className="dropdown-item text-danger" href="#">Salir</a></li>
+                    <li><a className="dropdown-item text-danger" href="#">Sign Out</a></li>
                 </ul>
             </div>
         </div>

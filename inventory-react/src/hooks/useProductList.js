@@ -3,29 +3,40 @@ import axios from "axios";
 
 export const useProductList = () => {
     const [products, setProducts] = useState([]);
-    const [categories, setCategories] = useState([]); // <--- NUEVO: Para llenar el dropdown
+    const [categories, setCategories] = useState([]);
+    const [page, setPage] = useState(0);         
+    const [totalPages, setTotalPages] = useState(0);
     const [searchTerm, setSearchTerm] = useState("");
-    const [selectedCategoryId, setSelectedCategoryId] = useState(""); // <--- NUEVO: Filtro seleccionado
+    const [selectedCategoryId, setSelectedCategoryId] = useState("");
     const [isLoading, setIsLoading] = useState(true);
 
     const API_URL = "http://localhost:8080/api/products";
-    const CAT_URL = "http://localhost:8080/api/categories"; // <--- Endpoint categorías
+    const CAT_URL = "http://localhost:8080/api/categories";
 
     useEffect(() => {
         loadData();
-    }, []);
+    }, [page, searchTerm, selectedCategoryId]); 
 
     const loadData = async () => {
         setIsLoading(true);
         try {
-            // Hacemos las dos peticiones en paralelo
+            const params = {
+                page: page,
+                size: 5,
+                search: searchTerm,
+                categoryId: selectedCategoryId
+            };
+
             const [productsRes, categoriesRes] = await Promise.all([
-                axios.get(API_URL),
+                axios.get(API_URL, { params }), 
                 axios.get(CAT_URL)
             ]);
-
-            setProducts(productsRes.data.content || []); 
-            setCategories(categoriesRes.data); // Guardamos categorías
+            setProducts(productsRes.data.content || []);
+            setTotalPages(productsRes.data.totalPages || 0);
+            
+            if (categories.length === 0) {
+                setCategories(categoriesRes.data);
+            }
             
         } catch (error) {
             console.error("Error loading data:", error);
@@ -36,37 +47,22 @@ export const useProductList = () => {
     };
 
     const handleDelete = async (id) => {
-        if (!window.confirm("¿Estás seguro de eliminar este producto?")) return;
+        if (!window.confirm("Are you sure you want to delete this product?")) return;
         try {
             await axios.delete(`${API_URL}/${id}`);
-            // Recargamos solo productos, no hace falta recargar categorías
-            const result = await axios.get(API_URL);
-            setProducts(result.data.content || []);
+            loadData(); 
         } catch (error) {
             console.error("Error deleting product:", error);
         }
     };
 
-    // --- LÓGICA DE FILTRADO DOBLE (Texto + Categoría) ---
-    const filteredProducts = products.filter(prod => {
-        // 1. Filtro por Texto
-        const matchesSearch = prod.name.toLowerCase().includes(searchTerm.toLowerCase());
-        
-        // 2. Filtro por Categoría (Si está vacía "" mostramos todo, si no, debe coincidir el ID)
-        const matchesCategory = selectedCategoryId === "" || 
-                                (prod.categoryId && prod.categoryId.toString() === selectedCategoryId);
-
-        return matchesSearch && matchesCategory;
-    });
-
     return {
-        products: filteredProducts,
-        categories,          // Exportamos la lista de categorías
-        selectedCategoryId,  // Exportamos el valor seleccionado
-        setSelectedCategoryId, // Exportamos el setter
-        searchTerm,
-        setSearchTerm,
+        products,
+        categories,
+        selectedCategoryId, setSelectedCategoryId,
+        searchTerm, setSearchTerm,
         isLoading,
-        handleDelete
+        handleDelete,
+        page, setPage, totalPages
     };
 };

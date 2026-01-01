@@ -24,7 +24,6 @@ export const useProductDetail = () => {
         }
     };
 
-    // Lógica derivada (calculada al vuelo)
     const isLowStock = product ? product.stock <= product.minStock : false;
 
     return { 

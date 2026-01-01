@@ -1,4 +1,4 @@
-package com.joaco.inventory.infrastructure.input.rest.model;
+package com.joaco.inventory.domain.model;
 
 import lombok.Builder;
 import lombok.Data;

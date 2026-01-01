@@ -13,5 +13,4 @@ public interface ProductRepositoryPort {
     CustomPage<Product> findAll(ProductFilter filter, int page, int size);
     List<Product> findAll();
     void deleteById(Long id);
-
 }

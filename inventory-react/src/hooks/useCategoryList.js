@@ -25,24 +25,23 @@ export const useCategoryList = () => {
     };
 
     const handleDelete = async (id) => {
-        if (!window.confirm("¿Estás seguro de eliminar esta categoría?")) return;
+        if (!window.confirm("Are you sure you want to delete this category?")) return;
         try {
             await axios.delete(`${API_URL}/${id}`);
             loadCategories();
         } catch (error) {
             console.error("Error deleting category:", error);
-            alert("No se puede eliminar porque tiene productos asociados.");
+            alert("Cannot delete because it has associated products.");
         }
     };
 
-    // Calculamos la lista filtrada AQUÍ (la vista solo recibe el resultado final)
     const filteredCategories = categories.filter(cat => 
         cat.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         (cat.description && cat.description.toLowerCase().includes(searchTerm.toLowerCase()))
     );
 
     return {
-        categories: filteredCategories, // Devolvemos ya filtrado
+        categories: filteredCategories, 
         searchTerm,
         setSearchTerm,
         isLoading,

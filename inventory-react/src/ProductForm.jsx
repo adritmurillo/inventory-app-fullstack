@@ -1,8 +1,6 @@
-// src/ProductForm.jsx
 import { useProductForm } from "./hooks/useProductForm";
 
 export default function ProductForm() {
-    // 1. Extraemos toda la lógica del hook
     const { 
         product, categories, previewUrl, isEditing, 
         handleInputChange, handleFileChange, handleSubmit, navigate 
@@ -18,8 +16,6 @@ export default function ProductForm() {
                         </div>
                         <div className="card-body p-4">
                             <form onSubmit={handleSubmit}>
-                                
-                                {/* --- ZONA DE IMAGEN --- */}
                                 <div className="mb-4 text-center">
                                     <div className="mx-auto mb-3 d-flex align-items-center justify-content-center border rounded-3 bg-light position-relative overflow-hidden" 
                                          style={{ width: "150px", height: "150px", borderStyle: "dashed" }}>
@@ -35,8 +31,6 @@ export default function ProductForm() {
                                     <input type="file" className="form-control form-control-sm mx-auto" 
                                            style={{ maxWidth: "250px" }} onChange={handleFileChange} accept="image/*" />
                                 </div>
-
-                                {/* --- CAMPOS DEL FORMULARIO --- */}
                                 <div className="mb-3">
                                     <label className="form-label fw-bold small text-secondary">Product Name</label>
                                     <input type="text" className="form-control" name="name" 
@@ -82,8 +76,6 @@ export default function ProductForm() {
                                                value={product.minStock} onChange={handleInputChange} required />
                                     </div>
                                 </div>
-
-                                {/* --- BOTONES --- */}
                                 <div className="d-grid gap-2">
                                     <button type="submit" className="btn btn-primary py-2 fw-bold shadow-sm">
                                         {isEditing ? "Update Product" : "Save Product"}
