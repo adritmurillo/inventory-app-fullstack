@@ -17,6 +17,8 @@ export const useProductForm = () => {
     const [selectedImage, setSelectedImage] = useState(null);
     const [previewUrl, setPreviewUrl] = useState(null);
     const [categories, setCategories] = useState([]);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [error, setError] = useState("");
 
     const API_URL = "/products";
     const CAT_URL = "/categories";
@@ -64,11 +66,35 @@ export const useProductForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setError("");
+
+        const price = parseFloat(product.price);
+        const stock = Number(product.stock);
+        const minStock = Number(product.minStock);
+
+        if (Number.isNaN(price) || price <= 0) {
+            setError("Price must be greater than 0.");
+            return;
+        }
+        if (Number.isNaN(stock) || stock < 0) {
+            setError("Stock cannot be negative.");
+            return;
+        }
+        if (Number.isNaN(minStock) || minStock < 0) {
+            setError("Minimum stock cannot be negative.");
+            return;
+        }
+        if (minStock > stock) {
+            setError("Minimum stock cannot exceed current stock.");
+            return;
+        }
+
         const formData = new FormData();
         formData.append("product", new Blob([JSON.stringify(product)], { type: 'application/json' }));
         if (selectedImage) formData.append("image", selectedImage);
 
         try {
+            setIsSubmitting(true);
             const headers = { "Content-Type": "multipart/form-data" };
             if (id) {
                 await apiClient.put(`${API_URL}/${id}`, formData, { headers });
@@ -79,7 +105,9 @@ export const useProductForm = () => {
             }
         } catch (error) {
             console.error("Error saving product:", error);
-            alert("Error saving product");
+            setError("Error saving product. Please try again.");
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -88,6 +116,8 @@ export const useProductForm = () => {
         categories,
         previewUrl,
         isEditing: !!id,
+        isSubmitting,
+        error,
         handleInputChange,
         handleFileChange,
         handleSubmit,

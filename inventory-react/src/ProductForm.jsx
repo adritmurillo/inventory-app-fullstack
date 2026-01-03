@@ -2,7 +2,7 @@ import { useProductForm } from "./hooks/useProductForm";
 
 export default function ProductForm() {
     const { 
-        product, categories, previewUrl, isEditing,
+        product, categories, previewUrl, isEditing, isSubmitting, error,
         handleInputChange, handleFileChange, handleSubmit, navigate 
     } = useProductForm();
 
@@ -15,6 +15,11 @@ export default function ProductForm() {
                             <h3 className="fw-bold text-dark">{isEditing ? "Edit Product" : "New Product"}</h3>
                         </div>
                         <div className="card-body p-4">
+                            {error && (
+                                <div className="alert alert-danger" role="alert">
+                                    {error}
+                                </div>
+                            )}
                             <form onSubmit={handleSubmit}>
                                 <div className="mb-4 text-center">
                                     <div className="mx-auto mb-3 d-flex align-items-center justify-content-center border rounded-3 bg-light position-relative overflow-hidden" 
@@ -77,11 +82,11 @@ export default function ProductForm() {
                                     </div>
                                 </div>
                                 <div className="d-grid gap-2">
-                                    <button type="submit" className="btn btn-primary py-2 fw-bold shadow-sm">
-                                        {isEditing ? "Update Product" : "Save Product"}
+                                    <button type="submit" className="btn btn-primary py-2 fw-bold shadow-sm" disabled={isSubmitting}>
+                                        {isSubmitting ? "Saving..." : isEditing ? "Update Product" : "Save Product"}
                                     </button>
                                     <button type="button" className="btn btn-link text-secondary text-decoration-none" 
-                                            onClick={() => navigate("/products")}>
+                                            onClick={() => navigate("/products")} disabled={isSubmitting}>
                                         Cancel
                                     </button>
                                 </div>

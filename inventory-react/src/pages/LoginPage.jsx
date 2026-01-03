@@ -20,7 +20,7 @@ const LoginPage = () => {
             navigate('/dashboard'); 
         } catch (err) {
             console.error(err);
-            setError('Usuario o contraseña incorrectos');
+            setError('Invalid username or password');
         }
     };
 
@@ -33,7 +33,7 @@ const LoginPage = () => {
 
                 <form onSubmit={handleSubmit}>
                     <div className="mb-3">
-                        <label className="form-label">Usuario</label>
+                        <label className="form-label">Username</label>
                         <input
                             type="text"
                             name="username"
@@ -44,7 +44,7 @@ const LoginPage = () => {
                         />
                     </div>
                     <div className="mb-3">
-                        <label className="form-label">Contraseña</label>
+                        <label className="form-label">Password</label>
                         <input
                             type="password"
                             name="password"
@@ -55,7 +55,7 @@ const LoginPage = () => {
                         />
                     </div>
                     <button type="submit" className="btn btn-primary w-100">
-                        Ingresar
+                        Login
                     </button>
                 </form>
             </div>

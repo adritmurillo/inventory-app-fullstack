@@ -56,11 +56,15 @@ export default function Sidebar() {
                     className="d-flex align-items-center text-dark text-decoration-none dropdown-toggle border-0 bg-transparent p-0"
                     type="button"
                     onClick={() => setMenuOpen((prev) => !prev)}
+                    aria-haspopup="true"
+                    aria-expanded={menuOpen}
+                    aria-controls="user-menu"
                 >
                     <div className="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-2" style={{width: "32px", height: "32px"}}>A</div>
                     <strong>Admin</strong>
                 </button>
                 <ul
+                    id="user-menu"
                     className={`dropdown-menu text-small shadow dropdown-menu-anim ${menuOpen ? "show" : ""}`}
                     style={{
                         display: menuOpen ? "block" : "none",
