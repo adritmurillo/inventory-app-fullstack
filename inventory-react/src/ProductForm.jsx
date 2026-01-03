@@ -2,7 +2,7 @@ import { useProductForm } from "./hooks/useProductForm";
 
 export default function ProductForm() {
     const { 
-        product, categories, previewUrl, isEditing, 
+        product, categories, previewUrl, isEditing,
         handleInputChange, handleFileChange, handleSubmit, navigate 
     } = useProductForm();
 
@@ -81,7 +81,7 @@ export default function ProductForm() {
                                         {isEditing ? "Update Product" : "Save Product"}
                                     </button>
                                     <button type="button" className="btn btn-link text-secondary text-decoration-none" 
-                                            onClick={() => navigate("/")}>
+                                            onClick={() => navigate("/products")}>
                                         Cancel
                                     </button>
                                 </div>

@@ -79,6 +79,17 @@ body {
     color: #0d6efd;
 }
 
+.dropdown-menu-anim {
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.dropdown-menu-anim.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
 @media (max-width: 991px) {
     .top-value-card {
         min-height: 0;

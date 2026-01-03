@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import { apiClient } from "../services/apiClient";
 
 export const useProductList = () => {
     const [products, setProducts] = useState([]);
@@ -10,8 +10,8 @@ export const useProductList = () => {
     const [selectedCategoryId, setSelectedCategoryId] = useState("");
     const [isLoading, setIsLoading] = useState(true);
 
-    const API_URL = "http://localhost:8080/api/products";
-    const CAT_URL = "http://localhost:8080/api/categories";
+    const API_URL = "/products";
+    const CAT_URL = "/categories";
 
     useEffect(() => {
         loadData();
@@ -28,8 +28,8 @@ export const useProductList = () => {
             };
 
             const [productsRes, categoriesRes] = await Promise.all([
-                axios.get(API_URL, { params }), 
-                axios.get(CAT_URL)
+                apiClient.get(API_URL, { params }), 
+                apiClient.get(CAT_URL)
             ]);
             setProducts(productsRes.data.content || []);
             setTotalPages(productsRes.data.totalPages || 0);
@@ -49,7 +49,7 @@ export const useProductList = () => {
     const handleDelete = async (id) => {
         if (!window.confirm("Are you sure you want to delete this product?")) return;
         try {
-            await axios.delete(`${API_URL}/${id}`);
+            await apiClient.delete(`${API_URL}/${id}`);
             loadData(); 
         } catch (error) {
             console.error("Error deleting product:", error);

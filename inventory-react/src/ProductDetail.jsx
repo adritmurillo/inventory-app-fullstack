@@ -9,7 +9,7 @@ export default function ProductDetail() {
 
     return (
         <div className="container mt-4">
-            <button onClick={() => navigate(-1)} className="btn btn-link text-decoration-none mb-3 ps-0 text-secondary">
+            <button onClick={() => navigate("/products")} className="btn btn-link text-decoration-none mb-3 ps-0 text-secondary">
                 <i className="bi bi-arrow-left me-2"></i>Go back
             </button>
 

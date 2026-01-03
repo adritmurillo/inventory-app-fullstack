@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
+import { apiClient } from "../services/apiClient";
 
 export const useProductDetail = () => {
     const { id } = useParams();
@@ -15,7 +15,7 @@ export const useProductDetail = () => {
 
     const loadProduct = async () => {
         try {
-            const result = await axios.get(`http://localhost:8080/api/products/${id}`);
+            const result = await apiClient.get(`/products/${id}`);
             setProduct(result.data);
         } catch (error) {
             console.error("Error loading product", error);

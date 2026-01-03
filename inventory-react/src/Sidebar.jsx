@@ -1,13 +1,27 @@
 import { Link } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
 import { useSidebar } from "./hooks/useSidebar";
+import { logout } from "./services/authService";
 
 export default function Sidebar() {
     const { isActive } = useSidebar();
+    const [menuOpen, setMenuOpen] = useState(false);
+    const menuRef = useRef(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (menuRef.current && !menuRef.current.contains(event.target)) {
+                setMenuOpen(false);
+            }
+        };
+        document.addEventListener("click", handleClickOutside);
+        return () => document.removeEventListener("click", handleClickOutside);
+    }, []);
 
     return (
         <div className="d-flex flex-column flex-shrink-0 p-3 bg-white shadow-sm vh-100 position-fixed" style={{ width: "250px", top: 0, left: 0, zIndex: 1000 }}>
             
-            <Link to="/" className="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-decoration-none text-dark">
+            <Link to="/dashboard" className="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-decoration-none text-dark">
                 <i className="bi bi-box-seam-fill fs-3 text-primary me-2"></i>
                 <span className="fs-4 fw-bold">InventoryApp</span>
             </Link>
@@ -16,7 +30,7 @@ export default function Sidebar() {
             
             <ul className="nav nav-pills flex-column mb-auto">
                 <li className="nav-item mb-1">
-                    <Link to="/" className={isActive("/")}>
+                    <Link to="/dashboard" className={isActive("/dashboard")}>
                         <i className="bi bi-speedometer2 me-2"></i> Dashboard
                     </Link>
                 </li>
@@ -37,15 +51,31 @@ export default function Sidebar() {
             
             <hr />
             
-            <div className="dropdown">
-                <a href="#" className="d-flex align-items-center text-dark text-decoration-none dropdown-toggle" data-bs-toggle="dropdown">
+            <div className="dropdown dropup" ref={menuRef}>
+                <button
+                    className="d-flex align-items-center text-dark text-decoration-none dropdown-toggle border-0 bg-transparent p-0"
+                    type="button"
+                    onClick={() => setMenuOpen((prev) => !prev)}
+                >
                     <div className="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-2" style={{width: "32px", height: "32px"}}>A</div>
                     <strong>Admin</strong>
-                </a>
-                <ul className="dropdown-menu text-small shadow">
-                    <li><a className="dropdown-item" href="#">Profile</a></li>
+                </button>
+                <ul
+                    className={`dropdown-menu text-small shadow dropdown-menu-anim ${menuOpen ? "show" : ""}`}
+                    style={{
+                        display: menuOpen ? "block" : "none",
+                        bottom: "100%",
+                        top: "auto",
+                        marginBottom: "8px",
+                    }}
+                >
+                    <li><button className="dropdown-item" type="button">Profile</button></li>
                     <li><hr className="dropdown-divider" /></li>
-                    <li><a className="dropdown-item text-danger" href="#">Sign Out</a></li>
+                    <li>
+                        <button className="dropdown-item text-danger" type="button" onClick={logout}>
+                            Sign Out
+                        </button>
+                    </li>
                 </ul>
             </div>
         </div>

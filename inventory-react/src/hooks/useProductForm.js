@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
+import { apiClient } from "../services/apiClient";
 
 export const useProductForm = () => {
     const navigate = useNavigate();
@@ -18,8 +18,8 @@ export const useProductForm = () => {
     const [previewUrl, setPreviewUrl] = useState(null);
     const [categories, setCategories] = useState([]);
 
-    const API_URL = "http://localhost:8080/api/products";
-    const CAT_URL = "http://localhost:8080/api/categories";
+    const API_URL = "/products";
+    const CAT_URL = "/categories";
 
     useEffect(() => {
         loadCategories();
@@ -28,14 +28,14 @@ export const useProductForm = () => {
 
     const loadCategories = async () => {
         try {
-            const result = await axios.get(CAT_URL);
+            const result = await apiClient.get(CAT_URL);
             setCategories(result.data);
         } catch (e) { console.error("Error loading categories", e); }
     };
 
     const loadProduct = async () => {
         try {
-            const result = await axios.get(`${API_URL}/${id}`);
+            const result = await apiClient.get(`${API_URL}/${id}`);
             setProduct({
                 name: result.data.name,
                 description: result.data.description,
@@ -70,9 +70,13 @@ export const useProductForm = () => {
 
         try {
             const headers = { "Content-Type": "multipart/form-data" };
-            if (id) await axios.put(`${API_URL}/${id}`, formData, { headers });
-            else await axios.post(API_URL, formData, { headers });
-            navigate("/");
+            if (id) {
+                await apiClient.put(`${API_URL}/${id}`, formData, { headers });
+                navigate(`/view/${id}`);
+            } else {
+                await apiClient.post(API_URL, formData, { headers });
+                navigate("/products");
+            }
         } catch (error) {
             console.error("Error saving product:", error);
             alert("Error saving product");

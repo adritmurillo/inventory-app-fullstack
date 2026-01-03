@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import { apiClient } from "../services/apiClient";
 
 export const useCategoryList = () => {
     const [categories, setCategories] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [isLoading, setIsLoading] = useState(true);
 
-    const API_URL = "http://localhost:8080/api/categories";
+    const API_URL = "/categories";
 
     useEffect(() => {
         loadCategories();
@@ -15,7 +15,7 @@ export const useCategoryList = () => {
     const loadCategories = async () => {
         setIsLoading(true);
         try {
-            const result = await axios.get(API_URL);
+            const result = await apiClient.get(API_URL);
             setCategories(result.data);
         } catch (error) {
             console.error("Error loading categories:", error);
@@ -27,7 +27,7 @@ export const useCategoryList = () => {
     const handleDelete = async (id) => {
         if (!window.confirm("Are you sure you want to delete this category?")) return;
         try {
-            await axios.delete(`${API_URL}/${id}`);
+            await apiClient.delete(`${API_URL}/${id}`);
             loadCategories();
         } catch (error) {
             console.error("Error deleting category:", error);

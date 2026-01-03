@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import { apiClient } from "../services/apiClient";
 
 export const useDashboard = () => {
     const [stats, setStats] = useState({ 
@@ -21,11 +21,11 @@ export const useDashboard = () => {
     const loadData = async () => {
         try {
             const [statsRes, chartRes, lowStockRes, pieRes, listRes] = await Promise.all([
-                axios.get("http://localhost:8080/api/dashboard/stats"),
-                axios.get("http://localhost:8080/api/dashboard/chart"),
-                axios.get("http://localhost:8080/api/dashboard/low-stock"),
-                axios.get("http://localhost:8080/api/dashboard/pie-chart"),
-                axios.get(`http://localhost:8080/api/dashboard/products-by-price?sort=${sortOrder}`)
+                apiClient.get("/dashboard/stats"),
+                apiClient.get("/dashboard/chart"),
+                apiClient.get("/dashboard/low-stock"),
+                apiClient.get("/dashboard/pie-chart"),
+                apiClient.get(`/dashboard/products-by-price?sort=${sortOrder}`)
             ]);
 
             setStats(statsRes.data);
@@ -43,7 +43,7 @@ export const useDashboard = () => {
     useEffect(() => {
         const fetchList = async () => {
             try {
-                const res = await axios.get(`http://localhost:8080/api/dashboard/products-by-price?sort=${sortOrder}`);
+                const res = await apiClient.get(`/dashboard/products-by-price?sort=${sortOrder}`);
                 setSortedProducts(res.data || []);
             } catch (e) {
                 console.error(e);

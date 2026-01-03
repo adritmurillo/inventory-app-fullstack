@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { apiClient } from "../services/apiClient";
 
 export const useCategoryForm = () => {
     const navigate = useNavigate();
@@ -13,7 +13,7 @@ export const useCategoryForm = () => {
         description: ""
     });
 
-    const API_URL = "http://localhost:8080/api/categories";
+    const API_URL = "/categories";
 
     useEffect(() => {
         if (editId) loadCategory();
@@ -21,7 +21,7 @@ export const useCategoryForm = () => {
 
     const loadCategory = async () => {
         try {
-            const result = await axios.get(`${API_URL}/${editId}`);
+            const result = await apiClient.get(`${API_URL}/${editId}`);
             setCategory(result.data);
         } catch (error) {
             console.error("Error loading category", error);
@@ -36,9 +36,9 @@ export const useCategoryForm = () => {
         e.preventDefault();
         try {
             if (editId) {
-                await axios.put(`${API_URL}/${editId}`, category);
+                await apiClient.put(`${API_URL}/${editId}`, category);
             } else {
-                await axios.post(API_URL, category);
+                await apiClient.post(API_URL, category);
             }
             navigate("/categories");
         } catch (error) {
