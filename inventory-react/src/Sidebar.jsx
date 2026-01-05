@@ -2,11 +2,13 @@ import { Link } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { useSidebar } from "./hooks/useSidebar";
 import { logout } from "./services/authService";
+import { useAuthInfo } from "./hooks/useAuthInfo";
 
 export default function Sidebar() {
     const { isActive } = useSidebar();
     const [menuOpen, setMenuOpen] = useState(false);
     const menuRef = useRef(null);
+    const { isAdmin, username, initial } = useAuthInfo();
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -44,6 +46,13 @@ export default function Sidebar() {
                         <i className="bi bi-tags-fill me-2"></i> Categories
                     </Link>
                 </li>
+                {isAdmin && (
+                    <li className="nav-item mb-1">
+                        <Link to="/users" className={isActive("/users")}>
+                            <i className="bi bi-people-fill me-2"></i> Users
+                        </Link>
+                    </li>
+                )}
                 
                 <li className="mt-4 mb-2 ps-2 text-uppercase text-muted fw-bold small">Store</li>
                 <li><a href="#" className="nav-link text-secondary disabled"><i className="bi bi-cart me-2"></i> Orders</a></li>
@@ -60,8 +69,8 @@ export default function Sidebar() {
                     aria-expanded={menuOpen}
                     aria-controls="user-menu"
                 >
-                    <div className="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-2" style={{width: "32px", height: "32px"}}>A</div>
-                    <strong>Admin</strong>
+                    <div className="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-2" style={{width: "32px", height: "32px"}}>{initial}</div>
+                    <strong>{username}</strong>
                 </button>
                 <ul
                     id="user-menu"

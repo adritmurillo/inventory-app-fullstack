@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom";
+import { useAuthInfo } from "./hooks/useAuthInfo";
 import { useProductDetail } from "./hooks/useProductDetail";
 
 export default function ProductDetail() {
     const { product, loading, isLowStock, navigate } = useProductDetail();
+    const { isAdmin } = useAuthInfo();
 
     if (loading) return <div className="text-center mt-5">Loading details...</div>;
     if (!product) return <div className="text-center mt-5 text-danger">Product not found</div>;
@@ -58,11 +60,13 @@ export default function ProductDetail() {
                                 </div>
                             )}
 
-                            <div className="d-grid">
-                                <Link to={`/edit/${product.id}`} className="btn btn-outline-primary py-2 fw-bold">
-                                    <i className="bi bi-pencil-square me-2"></i> Edit Product
-                                </Link>
-                            </div>
+                            {isAdmin && (
+                                <div className="d-grid">
+                                    <Link to={`/edit/${product.id}`} className="btn btn-outline-primary py-2 fw-bold">
+                                        <i className="bi bi-pencil-square me-2"></i> Edit Product
+                                    </Link>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>

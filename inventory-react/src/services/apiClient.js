@@ -23,7 +23,6 @@ function isTokenExpired(token) {
     return payload.exp < nowSeconds;
 }
 
-// Attach JWT if present
 apiClient.interceptors.request.use((config) => {
     const token = localStorage.getItem(TOKEN_KEY);
     if (token) {
@@ -33,15 +32,15 @@ apiClient.interceptors.request.use((config) => {
     return config;
 });
 
-// Auto-logout on 401 responses
 apiClient.interceptors.response.use(
     (response) => response,
     (error) => {
         const status = error.response?.status;
-        if (status === 401 || status === 403) {
+        if (status === 401) {
             localStorage.removeItem(TOKEN_KEY);
             window.location.href = "/login";
         }
+        
         return Promise.reject(error);
     }
 );

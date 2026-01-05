@@ -9,8 +9,9 @@ import ProductDetail from "./ProductDetail";
 import CategoryForm from "./CategoryForm";
 import CategoryList from "./CategoryList";
 import LoginPage from "./pages/LoginPage";
+import UserList from "./UserList";
+import AdminRoute from './components/AdminRoute';
 
-// Layout for routes that should display the sidebar and footer
 function AppLayout() {
   return (
     <div className="d-flex min-vh-100 bg-light">
@@ -27,7 +28,6 @@ function AppLayout() {
   );
 }
 
-// Simple route guard: if there's no token, send user to login
 function ProtectedLayout() {
   const token = getToken();
   if (!token || isTokenExpired(token)) {
@@ -41,13 +41,10 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Default route redirects to login */}
         <Route path="/" element={<Navigate to="/login" replace />} />
 
-        {/* Public login route without sidebar */}
         <Route path="/login" element={<LoginPage />} />
 
-        {/* Protected/app routes */}
         <Route element={<ProtectedLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/products" element={<ProductList />} />
@@ -56,6 +53,9 @@ function App() {
           <Route path="/view/:id" element={<ProductDetail />} />
           <Route path="/categories" element={<CategoryList />} />
           <Route path="/new-category" element={<CategoryForm />} />
+          <Route element={<AdminRoute />}>
+              <Route path="/users" element={<UserList />} />
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>

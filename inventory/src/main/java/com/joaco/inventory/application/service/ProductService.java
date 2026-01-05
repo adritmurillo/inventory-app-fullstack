@@ -9,12 +9,11 @@ import com.joaco.inventory.domain.port.out.CategoryRepositoryPort;
 import com.joaco.inventory.domain.port.out.ImageStoragePort;
 import com.joaco.inventory.domain.port.out.ProductRepositoryPort;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import java.util.NoSuchElementException;
 
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -38,7 +37,7 @@ public class ProductService implements ProductServicePort {
     @Override
     public Product updateProduct(Long id, Product product, MultipartFile image) {
         Product existingProduct = productRepositoryPort.findById(id).orElseThrow(
-                () -> new RuntimeException("Product not found with id " + id)
+                () -> new NoSuchElementException("Product not found with id " + id)
         );
 
         existingProduct.updateName(product.getName());
@@ -70,7 +69,7 @@ public class ProductService implements ProductServicePort {
     @Override
     public Product getProduct(Long id) {
         return productRepositoryPort.findById(id).orElseThrow(
-                () -> new RuntimeException("Product not found with id " + id)
+                () -> new NoSuchElementException("Product not found with id " + id)
         );
     }
 
@@ -82,7 +81,7 @@ public class ProductService implements ProductServicePort {
     @Override
     public void deleteProduct(Long id) {
         if(!productRepositoryPort.findById(id).isPresent()){
-            throw new RuntimeException("Product not found with id " + id);
+            throw new NoSuchElementException("Product not found with id " + id);
         }
         productRepositoryPort.deleteById(id);
     }

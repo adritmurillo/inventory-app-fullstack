@@ -3,11 +3,11 @@ package com.joaco.inventory.infrastructure.input.rest;
 
 import com.joaco.inventory.domain.model.ChartData;
 import com.joaco.inventory.domain.port.in.DashboardServicePort;
-import com.joaco.inventory.domain.model.DashboardStats;
+import com.joaco.inventory.infrastructure.input.rest.mapper.DashboardMapper;
 import com.joaco.inventory.infrastructure.input.rest.mapper.ProductMapper;
+import com.joaco.inventory.infrastructure.input.rest.model.DashboardStatsResponse;
 import com.joaco.inventory.infrastructure.input.rest.model.ProductResponse;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,15 +15,15 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/api/dashboard")
 public class DashboardController {
     private final DashboardServicePort dashboardServicePort;
     private final ProductMapper productMapper;
+    private final DashboardMapper dashboardMapper;
 
     @GetMapping("/stats")
-    public ResponseEntity<DashboardStats> getStats() {
-        return ResponseEntity.ok(dashboardServicePort.getStats());
+    public ResponseEntity<DashboardStatsResponse> getStats() {
+        return ResponseEntity.ok(dashboardMapper.toResponse(dashboardServicePort.getStats()));
     }
 
     @GetMapping("/chart")

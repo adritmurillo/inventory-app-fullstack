@@ -29,19 +29,19 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final UserMapper userMapper;
 
-    @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
-        if (userJpaRepository.findByUsername(request.getUsername()).isPresent()) {
-            return ResponseEntity.badRequest().body(Map.of("error", "El usuario ya existe"));
-        }
-
-        UserEntity user = userMapper.toEntity(request);
-        userJpaRepository.save(user);
-
-        String jwtToken = jwtService.generateToken(new SecurityUser(user));
-
-        return ResponseEntity.ok(Map.of("token", jwtToken));
-    }
+//    @PostMapping("/register")
+//    public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
+//        if (userJpaRepository.findByUsername(request.getUsername()).isPresent()) {
+//            return ResponseEntity.badRequest().body(Map.of("error", "User already exists"));
+//        }
+//
+//        UserEntity user = userMapper.toEntity(request);
+//        userJpaRepository.save(user);
+//
+//        String jwtToken = jwtService.generateToken(new SecurityUser(user));
+//
+//        return ResponseEntity.ok(Map.of("token", jwtToken));
+//    }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
