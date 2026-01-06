@@ -9,7 +9,9 @@ import ProductDetail from "./ProductDetail";
 import CategoryForm from "./CategoryForm";
 import CategoryList from "./CategoryList";
 import LoginPage from "./pages/LoginPage";
+import SupplyPage from "./pages/SupplyPage";
 import UserList from "./UserList";
+import PosPage from "./pages/pos/PosPage";
 import AdminRoute from './components/AdminRoute';
 
 function AppLayout() {
@@ -47,6 +49,8 @@ function App() {
 
         <Route element={<ProtectedLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/pos" element={<PosPage />} />
+          <Route path="/supply" element={<SupplyPage />} />
           <Route path="/products" element={<ProductList />} />
           <Route path="/new" element={<ProductForm />} />
           <Route path="/edit/:id" element={<ProductForm />} />

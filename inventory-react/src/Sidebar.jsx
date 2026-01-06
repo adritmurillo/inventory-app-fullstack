@@ -37,6 +37,16 @@ export default function Sidebar() {
                     </Link>
                 </li>
                 <li className="nav-item mb-1">
+                    <Link to="/pos" className={isActive("/pos")}>
+                        <i className="bi bi-shop me-2"></i> POS (Sales)
+                    </Link>
+                </li>
+                <li className="nav-item mb-1">
+                    <Link to="/supply" className={isActive("/supply")}>
+                        <i className="bi bi-box-seam me-2"></i> Reception (Stock)
+                    </Link>
+                </li>
+                <li className="nav-item mb-1">
                     <Link to="/products" className={isActive("/products")}>
                         <i className="bi bi-grid me-2"></i> Products
                     </Link>
