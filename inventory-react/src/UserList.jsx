@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { getAllUsers, createUser, deleteUser } from "./services/userService";
 import { useAuthInfo } from "./hooks/useAuthInfo";
 import UserTable from "./components/UserTable";
@@ -8,6 +8,7 @@ const UserList = () => {
     const [users, setUsers] = useState([]);
     const [error, setError] = useState("");
     const [showModal, setShowModal] = useState(false);
+    const [fieldErrors, setFieldErrors] = useState({});
     const [formData, setFormData] = useState({
         username: "",
         email: "",
@@ -16,7 +17,11 @@ const UserList = () => {
     });
     const { username: currentUser } = useAuthInfo();
 
+    const loadedRef = useRef(false);
+
     useEffect(() => {
+        if (loadedRef.current) return;
+        loadedRef.current = true;
         loadUsers();
     }, []);
 
@@ -25,23 +30,25 @@ const UserList = () => {
             const data = await getAllUsers();
             setUsers(data);
         } catch (err) {
-            if (err.response && err.response.status === 403) {
+            if (err.status === 403 || err.response?.status === 403) {
                 setError("⛔ You do not have permission to view users.");
             } else {
-                setError("Error loading users.");
+                setError(err.message || "Error loading users.");
             }
         }
     };
 
     const handleChange = (e) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value
-        });
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
+        if (fieldErrors[name]) {
+            setFieldErrors((prev) => ({ ...prev, [name]: null }));
+        }
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setFieldErrors({});
         try {
             await createUser(formData);
             setShowModal(false);
@@ -49,8 +56,19 @@ const UserList = () => {
             loadUsers();
             alert("✅ User created successfully");
         } catch (err) {
-            alert("❌ Error: " + (err.response?.data?.error || "Could not create"));
+            if (err.status === 400 && err.fieldErrors) {
+                setFieldErrors(err.fieldErrors);
+            } else if (err.status === 409) {
+                alert("❌ Error: " + (err.message || "User already exists"));
+            } else {
+                alert("❌ Error: " + (err.message || "Could not create user"));
+            }
         }
+    };
+
+    const handleCloseModal = () => {
+        setShowModal(false);
+        setFieldErrors({});
     };
 
     const handleDelete = async (id) => {
@@ -59,7 +77,7 @@ const UserList = () => {
                 await deleteUser(id);
                 loadUsers();
             } catch (err) {
-                alert("Error deleting user");
+                alert(err.message || "Error deleting user");
             }
         }
     };
@@ -81,10 +99,11 @@ const UserList = () => {
 
             <UserModal
                 show={showModal}
-                onClose={() => setShowModal(false)}
+                onClose={handleCloseModal}
                 formData={formData}
                 onChange={handleChange}
                 onSubmit={handleSubmit}
+                fieldErrors={fieldErrors}
             />
         </div>
     );

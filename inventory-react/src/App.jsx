@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate, Outlet } from "react-router-dom
 import { getToken } from "./services/authService";
 import { isTokenExpired } from "./services/apiClient";
 import Sidebar from "./Sidebar";
-import Dashboard from "./Dashboard";
+import DashboardPage from "./pages/DashboardPage";
 import ProductList from "./ProductList";
 import ProductForm from "./ProductForm";
 import ProductDetail from "./ProductDetail";
@@ -13,6 +13,7 @@ import SupplyPage from "./pages/SupplyPage";
 import UserList from "./UserList";
 import PosPage from "./pages/pos/PosPage";
 import AdminRoute from './components/AdminRoute';
+import RoleGuard from "./components/RoleGuard";
 
 function AppLayout() {
   return (
@@ -48,18 +49,37 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
 
         <Route element={<ProtectedLayout />}>
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/pos" element={<PosPage />} />
           <Route path="/supply" element={<SupplyPage />} />
           <Route path="/products" element={<ProductList />} />
-          <Route path="/new" element={<ProductForm />} />
-          <Route path="/edit/:id" element={<ProductForm />} />
+          <Route
+            path="/new"
+            element={
+              <RoleGuard requiredRole="ADMIN">
+                <ProductForm />
+              </RoleGuard>
+            }
+          />
+          <Route
+            path="/edit/:id"
+            element={
+              <RoleGuard requiredRole="ADMIN">
+                <ProductForm />
+              </RoleGuard>
+            }
+          />
           <Route path="/view/:id" element={<ProductDetail />} />
           <Route path="/categories" element={<CategoryList />} />
           <Route path="/new-category" element={<CategoryForm />} />
-          <Route element={<AdminRoute />}>
-              <Route path="/users" element={<UserList />} />
-          </Route>
+          <Route
+            path="/users"
+            element={
+              <RoleGuard requiredRole="ADMIN">
+                <UserList />
+              </RoleGuard>
+            }
+          />
         </Route>
       </Routes>
     </BrowserRouter>

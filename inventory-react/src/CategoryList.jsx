@@ -6,14 +6,11 @@ import CategoryTable from "./components/CategoryTable";
 
 export default function CategoryList() {
     const navigate = useNavigate();
-    // Hook state and actions
     const { categories, searchTerm, setSearchTerm, handleDelete, isLoading } = useCategoryList();
     const { isAdmin } = useAuthInfo();
 
     return (
         <div className="w-100" style={{ maxWidth: "1000px" }}>
-            
-            {/* Header */}
             <div className="d-flex justify-content-between align-items-center mb-4">
                 <h3 className="fw-bold text-dark m-0">Category List</h3>
                 {isAdmin && (

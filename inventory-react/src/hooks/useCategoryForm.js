@@ -12,6 +12,8 @@ export const useCategoryForm = () => {
         name: "",
         description: ""
     });
+    const [error, setError] = useState("");
+    const [fieldErrors, setFieldErrors] = useState({});
 
     const API_URL = "/categories";
 
@@ -23,17 +25,24 @@ export const useCategoryForm = () => {
         try {
             const result = await apiClient.get(`${API_URL}/${editId}`);
             setCategory(result.data);
-        } catch (error) {
-            console.error("Error loading category", error);
+        } catch (err) {
+            console.error("Error loading category", err);
+            setError(err.message || "Error loading category");
         }
     };
 
     const handleInputChange = (e) => {
-        setCategory({ ...category, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        setCategory({ ...category, [name]: value });
+        if (fieldErrors[name]) {
+            setFieldErrors((prev) => ({ ...prev, [name]: null }));
+        }
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setError("");
+        setFieldErrors({});
         try {
             if (editId) {
                 await apiClient.put(`${API_URL}/${editId}`, category);
@@ -41,15 +50,24 @@ export const useCategoryForm = () => {
                 await apiClient.post(API_URL, category);
             }
             navigate("/categories");
-        } catch (error) {
-            console.error("Error saving category:", error);
-            alert("Error saving category");
+        } catch (err) {
+            console.error("Error saving category:", err);
+            if (err.status === 400 && err.fieldErrors) {
+                setFieldErrors(err.fieldErrors);
+                setError(err.message || "Please correct the errors below.");
+            } else if (err.status === 409) {
+                setError(err.message || "A category with this name already exists.");
+            } else {
+                setError(err.message || "Error saving category");
+            }
         }
     };
 
     return {
         category,
         isEditing: !!editId,
+        error,
+        fieldErrors,
         handleInputChange,
         handleSubmit,
         navigate

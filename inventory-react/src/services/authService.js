@@ -1,4 +1,7 @@
 import { apiClient, TOKEN_KEY } from "./apiClient";
+import { jwtDecode } from "jwt-decode";
+
+const stripBearerPrefix = (token) => token?.startsWith("Bearer ") ? token.slice(7) : token;
 
 export const login = async (username, password) => {
     const response = await apiClient.post("/auth/login", { username, password });
@@ -19,3 +22,19 @@ export const logout = () => {
 };
 
 export const getToken = () => localStorage.getItem(TOKEN_KEY);
+
+export const getUserRole = () => {
+    const storedRole = localStorage.getItem("role");
+    const token = stripBearerPrefix(getToken());
+
+    if (token) {
+        try {
+            const decoded = jwtDecode(token);
+            return decoded.role || decoded.roles?.[0] || storedRole || null;
+        } catch (error) {
+            console.error("Error decoding token for role", error);
+        }
+    }
+
+    return storedRole || null;
+};

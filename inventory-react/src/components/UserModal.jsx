@@ -1,4 +1,6 @@
-export default function UserModal({ show, onClose, formData, onChange, onSubmit }) {
+import FieldError from "./FieldError";
+
+export default function UserModal({ show, onClose, formData, onChange, onSubmit, fieldErrors = {} }) {
     if (!show) return null;
 
     return (
@@ -16,47 +18,51 @@ export default function UserModal({ show, onClose, formData, onChange, onSubmit 
                                 <input
                                     type="text"
                                     name="username"
-                                    className="form-control"
+                                    className={`form-control ${fieldErrors.username ? 'is-invalid' : ''}`}
                                     required
                                     value={formData.username}
                                     onChange={onChange}
                                 />
+                                <FieldError error={fieldErrors.username} />
                             </div>
                             <div className="mb-3">
                                 <label className="form-label">Email</label>
                                 <input
                                     type="email"
                                     name="email"
-                                    className="form-control"
+                                    className={`form-control ${fieldErrors.email ? 'is-invalid' : ''}`}
                                     required
                                     value={formData.email}
                                     onChange={onChange}
                                 />
+                                <FieldError error={fieldErrors.email} />
                             </div>
                             <div className="mb-3">
                                 <label className="form-label">Initial Password</label>
                                 <input
                                     type="password"
                                     name="password"
-                                    className="form-control"
+                                    className={`form-control ${fieldErrors.password ? 'is-invalid' : ''}`}
                                     required
                                     minLength="5"
                                     value={formData.password}
                                     onChange={onChange}
                                     placeholder="Minimum 5 characters"
                                 />
+                                <FieldError error={fieldErrors.password} />
                             </div>
                             <div className="mb-3">
                                 <label className="form-label">Role</label>
                                 <select
                                     name="role"
-                                    className="form-select"
+                                    className={`form-select ${fieldErrors.role ? 'is-invalid' : ''}`}
                                     value={formData.role}
                                     onChange={onChange}
                                 >
                                     <option value="EMPLOYEE">Employee (Sales)</option>
                                     <option value="ADMIN">Administrator (All)</option>
                                 </select>
+                                <FieldError error={fieldErrors.role} />
                             </div>
                         </div>
                         <div className="modal-footer">

@@ -13,11 +13,15 @@ import com.joaco.inventory.infrastructure.output.persistence.repository.UserJpaR
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Component
 @RequiredArgsConstructor
 public class SalePersistenceAdapter implements SaleRepositoryPort {
     private final SaleJpaRepository saleRepo;
-    private final SalePersistenceMapper mapper;
+    private final SalePersistenceMapper saleMapper;
     private final UserJpaRepository userRepo;
     private final ProductJpaRepository productRepo;
 
@@ -48,6 +52,20 @@ public class SalePersistenceAdapter implements SaleRepositoryPort {
 
         SaleEntity savedEntity = saleRepo.save(saleEntity);
 
-        return mapper.toDomain(savedEntity);
+        return saleMapper.toDomain(savedEntity);
+    }
+
+    @Override
+    public List<Sale> findAll() {
+        return saleRepo.findAll().stream()
+                .map(saleMapper::toDomain)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Sale> findByDateBetween(LocalDateTime start, LocalDateTime end) {
+        return saleRepo.findByDateBetween(start, end).stream()
+                .map(saleMapper :: toDomain)
+                .collect(Collectors.toList());
     }
 }

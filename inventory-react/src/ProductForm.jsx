@@ -1,8 +1,9 @@
 import { useProductForm } from "./hooks/useProductForm";
+import FieldError from "./components/FieldError";
 
 export default function ProductForm() {
     const { 
-        product, categories, previewUrl, isEditing, isSubmitting, error,
+        product, categories, previewUrl, isEditing, isSubmitting, error, fieldErrors,
         handleInputChange, handleFileChange, handleSubmit, navigate 
     } = useProductForm();
 
@@ -38,14 +39,16 @@ export default function ProductForm() {
                                 </div>
                                 <div className="mb-3">
                                     <label className="form-label fw-bold small text-secondary">Product Name</label>
-                                    <input type="text" className="form-control" name="name" 
+                                    <input type="text" className={`form-control ${fieldErrors.name ? 'is-invalid' : ''}`} name="name" 
                                            value={product.name} onChange={handleInputChange} required />
+                                    <FieldError error={fieldErrors.name} />
                                 </div>
 
                                 <div className="mb-3">
                                     <label className="form-label fw-bold small text-secondary">Description</label>
-                                    <textarea className="form-control" name="description" rows="2"
+                                    <textarea className={`form-control ${fieldErrors.description ? 'is-invalid' : ''}`} name="description" rows="2"
                                               value={product.description} onChange={handleInputChange} />
+                                    <FieldError error={fieldErrors.description} />
                                 </div>
 
                                 <div className="row g-2 mb-3">
@@ -53,32 +56,36 @@ export default function ProductForm() {
                                         <label className="form-label fw-bold small text-secondary">Price</label>
                                         <div className="input-group">
                                             <span className="input-group-text">$</span>
-                                            <input type="number" className="form-control" name="price" step="0.01"
+                                            <input type="number" className={`form-control ${fieldErrors.price ? 'is-invalid' : ''}`} name="price" step="0.01"
                                                    value={product.price} onChange={handleInputChange} required />
                                         </div>
+                                        <FieldError error={fieldErrors.price} />
                                     </div>
                                     <div className="col-6">
                                         <label className="form-label fw-bold small text-secondary">Category</label>
-                                        <select className="form-select" name="categoryId" 
+                                        <select className={`form-select ${fieldErrors.categoryId ? 'is-invalid' : ''}`} name="categoryId" 
                                                 value={product.categoryId} onChange={handleInputChange} required>
                                             <option value="">Select...</option>
                                             {categories.map(cat => (
                                                 <option key={cat.id} value={cat.id}>{cat.name}</option>
                                             ))}
                                         </select>
+                                        <FieldError error={fieldErrors.categoryId} />
                                     </div>
                                 </div>
 
                                 <div className="row g-2 mb-4">
                                     <div className="col-6">
                                         <label className="form-label fw-bold small text-secondary">Stock</label>
-                                        <input type="number" className="form-control" name="stock" 
+                                        <input type="number" className={`form-control ${fieldErrors.stock ? 'is-invalid' : ''}`} name="stock" 
                                                value={product.stock} onChange={handleInputChange} required />
+                                        <FieldError error={fieldErrors.stock} />
                                     </div>
                                     <div className="col-6">
                                         <label className="form-label fw-bold small text-secondary">Min. Alert</label>
-                                        <input type="number" className="form-control" name="minStock" 
+                                        <input type="number" className={`form-control ${fieldErrors.minStock ? 'is-invalid' : ''}`} name="minStock" 
                                                value={product.minStock} onChange={handleInputChange} required />
+                                        <FieldError error={fieldErrors.minStock} />
                                     </div>
                                 </div>
                                 <div className="d-grid gap-2">
