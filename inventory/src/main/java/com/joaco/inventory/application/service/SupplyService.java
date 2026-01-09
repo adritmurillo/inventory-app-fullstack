@@ -31,7 +31,7 @@ public class SupplyService implements SupplyServicePort {
     public Supply createSupply(List<SupplyDetail> itemsRequest, String username) {
 
         User user = userRepositoryPort.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found: " + username));
+                .orElseThrow(() -> new NoSuchElementException("User not found: " + username));
 
         List<SupplyDetail> finalItems = new ArrayList<>();
         BigDecimal total = BigDecimal.ZERO;
@@ -42,7 +42,7 @@ public class SupplyService implements SupplyServicePort {
             BigDecimal unitCost = itemRequest.getUnitCost() != null ? itemRequest.getUnitCost() : BigDecimal.ZERO;
 
             Product product = productRepositoryPort.findById(productId)
-                    .orElseThrow(() -> new NoSuchElementException("Producto ID " + productId + " does not exist"));
+                    .orElseThrow(() -> new NoSuchElementException("Product not found with ID: " + productId));
 
             product.updateStock(product.getStock() + quantity);
             productRepositoryPort.save(product);

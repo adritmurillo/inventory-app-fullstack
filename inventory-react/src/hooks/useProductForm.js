@@ -19,6 +19,7 @@ export const useProductForm = () => {
     const [categories, setCategories] = useState([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState("");
+    const [fieldErrors, setFieldErrors] = useState({});
 
     const API_URL = "/products";
     const CAT_URL = "/categories";
@@ -53,7 +54,11 @@ export const useProductForm = () => {
     };
 
     const handleInputChange = (e) => {
-        setProduct({ ...product, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        setProduct({ ...product, [name]: value });
+        if (fieldErrors[name]) {
+            setFieldErrors((prev) => ({ ...prev, [name]: null }));
+        }
     };
 
     const handleFileChange = (e) => {
@@ -67,6 +72,7 @@ export const useProductForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError("");
+        setFieldErrors({});
 
         const price = parseFloat(product.price);
         const stock = Number(product.stock);
@@ -103,9 +109,16 @@ export const useProductForm = () => {
                 await apiClient.post(API_URL, formData, { headers });
                 navigate("/products");
             }
-        } catch (error) {
-            console.error("Error saving product:", error);
-            setError("Error saving product. Please try again.");
+        } catch (err) {
+            console.error("Error saving product:", err);
+            if (err.status === 400 && err.fieldErrors) {
+                setFieldErrors(err.fieldErrors);
+                setError(err.message || "Please correct the errors below.");
+            } else if (err.status === 409) {
+                setError(err.message || "A product with this name already exists.");
+            } else {
+                setError(err.message || "Error saving product. Please try again.");
+            }
         } finally {
             setIsSubmitting(false);
         }
@@ -118,6 +131,7 @@ export const useProductForm = () => {
         isEditing: !!id,
         isSubmitting,
         error,
+        fieldErrors,
         handleInputChange,
         handleFileChange,
         handleSubmit,

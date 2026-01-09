@@ -1,7 +1,8 @@
 import { useCategoryForm } from "./hooks/useCategoryForm";
+import FieldError from "./components/FieldError";
 
 export default function CategoryForm() {
-    const { category, isEditing, handleInputChange, handleSubmit, navigate } = useCategoryForm();
+    const { category, isEditing, error, fieldErrors, handleInputChange, handleSubmit, navigate } = useCategoryForm();
 
     return (
         <div className="container py-5">
@@ -15,29 +16,36 @@ export default function CategoryForm() {
                             </h3>
                         </div>
                         <div className="card-body p-4">
+                            {error && (
+                                <div className="alert alert-danger" role="alert">
+                                    {error}
+                                </div>
+                            )}
                             <form onSubmit={handleSubmit}>
                                 <div className="mb-3">
                                     <label className="form-label fw-bold text-secondary small text-uppercase">Name</label>
                                     <input 
                                         type="text" 
-                                        className="form-control form-control-lg" 
+                                        className={`form-control form-control-lg ${fieldErrors.name ? 'is-invalid' : ''}`}
                                         placeholder="Ex: Electronics, Furniture..." 
                                         name="name" 
                                         value={category.name} 
                                         onChange={handleInputChange} 
                                         required 
                                     />
+                                    <FieldError error={fieldErrors.name} />
                                 </div>
 
                                 <div className="mb-4">
                                     <label className="form-label fw-bold text-secondary small text-uppercase">Description</label>
                                     <textarea 
-                                        className="form-control" 
+                                        className={`form-control ${fieldErrors.description ? 'is-invalid' : ''}`}
                                         rows="3" 
                                         name="description" 
                                         value={category.description} 
                                         onChange={handleInputChange} 
                                     />
+                                    <FieldError error={fieldErrors.description} />
                                 </div>
 
                                 <div className="d-flex justify-content-end gap-2">

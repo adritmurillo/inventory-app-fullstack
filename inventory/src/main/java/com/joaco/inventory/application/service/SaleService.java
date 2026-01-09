@@ -31,7 +31,7 @@ public class SaleService implements SaleServicePort {
     public Sale createSale(List<SaleDetail> itemsRequest, String username) {
 
         User user = userRepositoryPort.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found: " + username));
+                .orElseThrow(() -> new NoSuchElementException("User not found: " + username));
 
         Long userId = user.getId();
 

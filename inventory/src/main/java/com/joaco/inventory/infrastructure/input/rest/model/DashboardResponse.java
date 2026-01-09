@@ -1,4 +1,4 @@
-package com.joaco.inventory.domain.model;
+package com.joaco.inventory.infrastructure.input.rest.model;
 
 import lombok.Builder;
 import lombok.Data;
@@ -8,8 +8,7 @@ import java.util.Map;
 
 @Data
 @Builder
-
-public class DashboardStats {
+public class DashboardResponse {
     private int totalProducts;
     private BigDecimal totalInventoryValue;
     private int lowStockCount;
@@ -18,7 +17,6 @@ public class DashboardStats {
     private BigDecimal suppliesToday;
     private BigDecimal profitToday;
 
-    private Map<String, Integer> topSellingProducts;
-
     private BigDecimal salesThisMonth;
+    private Map<String, Integer> topSellingProducts;
 }

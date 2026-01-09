@@ -7,7 +7,7 @@ import java.util.List;
 public interface CategoryServicePort {
     Category createCategory(Category category);
     List<Category> getAllCategories();
-    Category getCategoryById(Long id);           // Para cargar el formulario de edición
-    Category updateCategory(Long id, Category category); // Para guardar la edición
+    Category getCategoryById(Long id);
+    Category updateCategory(Long id, Category category);
     void deleteCategory(Long id);
 }

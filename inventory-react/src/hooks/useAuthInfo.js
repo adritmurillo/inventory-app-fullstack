@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 
+const stripBearerPrefix = (token) => token?.startsWith("Bearer ") ? token.slice(7) : token;
+
 export function useAuthInfo() {
     const [role, setRole] = useState(null);
     const [username, setUsername] = useState("User");
     const [initial, setInitial] = useState("U");
 
     useEffect(() => {
-        const token = localStorage.getItem("token");
+        const token = stripBearerPrefix(localStorage.getItem("token"));
         if (!token) {
             return;
         }

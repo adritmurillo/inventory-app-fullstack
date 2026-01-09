@@ -13,6 +13,7 @@ import com.joaco.inventory.infrastructure.output.persistence.repository.UserJpaR
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,14 +21,14 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class SupplyPersistenceAdapter implements SupplyRepositoryPort {
 
-    private final SupplyJpaRepository supplyJpaRepository;
-    private final UserJpaRepository userJpaRepository;
-    private final ProductJpaRepository productJpaRepository;
-    private final SupplyPersistenceMapper supplyPersistenceMapper;
+    private final SupplyJpaRepository supplyRepo;
+    private final UserJpaRepository userRepo;
+    private final ProductJpaRepository productRepo;
+    private final SupplyPersistenceMapper supplyPerMapper;
 
     @Override
     public Supply save(Supply supply) {
-        UserEntity user = userJpaRepository.findById(supply.getUserId())
+        UserEntity user = userRepo.findById(supply.getUserId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         SupplyEntity entity = SupplyEntity.builder()
@@ -37,7 +38,7 @@ public class SupplyPersistenceAdapter implements SupplyRepositoryPort {
                 .build();
 
         supply.getItems().forEach(item -> {
-            ProductEntity product = productJpaRepository.findById(item.getProductId())
+            ProductEntity product = productRepo.findById(item.getProductId())
                     .orElseThrow(() -> new RuntimeException("Product not found"));
 
             entity.addDetail(SupplyDetailEntity.builder()
@@ -48,15 +49,22 @@ public class SupplyPersistenceAdapter implements SupplyRepositoryPort {
                     .build());
         });
 
-        SupplyEntity saved = supplyJpaRepository.save(entity);
+        SupplyEntity saved = supplyRepo.save(entity);
 
-        return supplyPersistenceMapper.toDomain(saved);
+        return supplyPerMapper.toDomain(saved);
     }
 
     @Override
     public List<Supply> findAll() {
-        return supplyJpaRepository.findAll().stream()
-                .map(supplyPersistenceMapper::toDomain)
+        return supplyRepo.findAll().stream()
+                .map(supplyPerMapper::toDomain)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Supply> findByDateBetween(LocalDateTime start, LocalDateTime end) {
+        return supplyRepo.findByDateBetween(start,end).stream()
+                .map(supplyPerMapper :: toDomain)
                 .collect(Collectors.toList());
     }
 }
